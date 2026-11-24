@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Icod-Añaza Centre · Kasino</title>
+<style>
+:root{--bk:#0a0a0a;--p:#141414;--p2:#1f1f1f;--gold:#d4af37;--gd:#7d6717;--w:#f6f1e3;--mut:#a39a82;--red:#e0574d;--ok:#6fd49a;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:radial-gradient(ellipse at 50% -10%,#33290a 0,var(--bk) 60%) fixed var(--bk);color:var(--w);font:15px/1.45 "Avenir Next","Helvetica Neue",Arial,sans-serif}
+h1,h2,.brand,.big{font-family:Didot,"Bodoni 72","Playfair Display",Georgia,serif;font-weight:700}
+.wrap{max-width:1000px;margin:0 auto;padding:12px}
+.top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:8px}
+.top button{background:var(--p);color:var(--w);border:1px solid var(--gd);border-radius:8px;padding:12px 8px;font:inherit;font-weight:600;cursor:pointer;min-height:54px}
+.top button.brand{font-size:1.05rem;color:var(--gold)}
+.top button.on{background:linear-gradient(180deg,#f0d77a,var(--gold));color:#000;border-color:var(--gold);box-shadow:0 0 18px #d4af3755}
+.bar{display:flex;justify-content:space-between;align-items:center;margin:10px 2px;gap:8px;flex-wrap:wrap}
+.bank{font-size:1.7rem;color:var(--gold);font-variant-numeric:tabular-nums}
+.sm{color:var(--mut);font-size:.85rem;margin:4px 0}
+.layout{display:grid;grid-template-columns:200px 1fr;gap:10px}
+#side{display:flex;flex-direction:column;gap:6px;background:var(--p);border:1px solid var(--gd);border-radius:10px;padding:8px;align-self:start}
+#side button{text-align:left;background:transparent;color:var(--w);border:1px solid transparent;border-radius:6px;padding:9px;font:inherit;cursor:pointer}
+#side button.on{border-color:var(--gold);color:var(--gold);background:var(--p2)}
+#side button:disabled{color:#6b6450;cursor:default}
+#side small{display:block;font-size:.72rem}
+#main{background:var(--p);border:1px solid var(--gd);border-radius:10px;padding:14px;min-height:430px}
+.bet{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--p2)}
+input[type=number]{width:100px;padding:8px;font:inherit;background:#000;color:var(--w);border:1px solid var(--gd);border-radius:6px}
+.go{background:linear-gradient(180deg,#f0d77a,var(--gold));color:#000;border:0;border-radius:6px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}
+.alt,.chip{background:transparent;color:var(--w);border:1px solid var(--gd);border-radius:6px;padding:8px 11px;font:inherit;cursor:pointer}
+.chip.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);color:var(--gold)}
+button:disabled{opacity:.4;cursor:default}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.msg{min-height:1.5em;margin-top:10px;font-weight:700}.win,.up{color:var(--ok)}.lose,.dn{color:var(--red)}
+.picks,.row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.track{background:#1a3a2c;border-radius:8px;padding:4px 0;margin:8px 0}
+.lane{position:relative;height:34px;border-bottom:1px dashed #ffffff33;display:flex;align-items:center}
+.lane b{position:absolute;left:6px;font-size:.75rem;font-weight:600}
+.horse{position:absolute;left:90px;font-size:1.4rem;transform:scaleX(-1);transition:left .12s linear}
+.hand{display:flex;gap:6px;flex-wrap:wrap;min-height:64px}
+.cd{width:44px;height:62px;background:#fff;color:#111;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:700;font-style:normal}
+.cd.r{color:#b3322b}.cd.bk{background:var(--gd)}
+.grid{display:grid;grid-template-columns:repeat(3,76px);gap:6px;justify-content:center;margin:12px 0}
+.sq{height:76px;border-radius:8px;border:0;font-size:2rem;cursor:pointer;background:repeating-linear-gradient(45deg,#7d6717,#7d6717 6px,#d4af37 6px,#d4af37 12px);color:transparent}
+.sq.open{background:var(--p2);color:var(--w)}
+canvas{width:100%;max-width:420px;display:block;margin:0 auto;background:#1a3a2c;border-radius:8px}
+.reels{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.reel{width:84px;height:92px;background:#000;border:2px solid var(--gold);border-radius:8px;font-size:2.8rem;display:flex;align-items:center;justify-content:center}
+.big{font-size:3.2rem;text-align:center;color:var(--gold);margin:14px 0}
+table{width:100%;border-collapse:collapse}td,th{padding:8px 4px;border-bottom:1px solid var(--p2);text-align:right}td:first-child,th:first-child{text-align:left}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--p2)}
+.item small{display:block;color:var(--mut)}
+.prog{height:10px;background:#000;border:1px solid var(--gd);border-radius:6px;overflow:hidden;margin:10px 0}
+.prog div{height:100%;background:var(--gold);width:0}
+#main{transition:box-shadow .6s}.track{position:relative}.fin{position:absolute;right:10px;top:0;bottom:0;width:5px;background:repeating-linear-gradient(#fff 0 6px,#000 6px 12px)}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:#000;border:1px solid var(--gold);color:var(--w);padding:10px 16px;border-radius:10px;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;z-index:9;text-align:center}#toast.on{opacity:1;transform:translate(-50%,0)}.bank{display:inline-block}
+.fw{animation:fw 1s}.fl{animation:fl .7s}@keyframes fw{30%{box-shadow:0 0 34px #d4af37,inset 0 0 28px #d4af3744}}@keyframes fl{30%{box-shadow:0 0 26px #e0574d99}}
+.bump{animation:bump .45s}@keyframes bump{40%{transform:scale(1.14)}}
+.cd{animation:deal .28s ease-out}@keyframes deal{from{transform:translateY(-16px) rotate(-8deg);opacity:0}}
+.reel{transition:filter .2s}.reel.sp{filter:blur(2px);border-color:#fff}
+.go,.sq,.chip,.alt{transition:transform .1s,filter .2s}.go:hover{filter:brightness(1.1)}.go:active,.sq:active{transform:scale(.94)}
+@media(prefers-reduced-motion:reduce){.fw,.fl,.bump,.cd{animation:none}}
+@media(max-width:700px){.layout{grid-template-columns:1fr}#side{flex-direction:row;overflow-x:auto}#side button{flex:none}.top{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top" id="top"></div>
+ <div class="bar"><span class="sm" id="jobline"></span><span class="bank big" id="bank"></span></div>
+ <div id="goal" class="sm"></div><div class="prog"><div id="gp"></div></div><div id="toast" role="status"></div><div class="layout"><div id="side"></div><div id="main"></div></div>
+ <p class="sm">Dinero ficticio. Se guarda en tu navegador. <button class="alt" id="snd">🔊 Sonido</button> <button class="alt" id="reset">Reiniciar partida</button></p>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let S={bank:200,hold:{},job:0,max:0,own:{},pend:0,hours:0,tick:0,debt:0,lend:null,st:{n:0,w:0,s:0,b:0,big:0,resc:0},ach:{}},V="kasino",GID="horses",busy=false;
+try{const v=JSON.parse(localStorage.getItem("kasino2")||"null");if(v)S=Object.assign(S,v)}catch(e){}
+const save=()=>{try{localStorage.setItem("kasino2",JSON.stringify(S))}catch(e){}};
+const fmt=n=>"€"+(Math.round(n*100)/100).toLocaleString("es-ES",{maximumFractionDigits:2});
+let MK=0;const A=[{n:"Bolsa",p:100,v:.02,d:0},{n:"Cripto",p:50,v:.07,d:0},{n:"Bonos",p:100,v:.004,d:.15},{n:"Oro",p:80,v:.012,d:0},{n:"Tecnología",p:60,v:.04,d:0},{n:"Inmuebles",p:200,v:.006,d:.25},{n:"Petróleo",p:70,v:.03,d:0},{n:"Memecoin",p:5,v:.15,d:0}];A.forEach(a=>{a.l=a.p;a.h=Array(30).fill(a.p)});
+const nw=()=>S.bank+A.reduce((t,a,i)=>t+(S.hold[i]||0)*a.p,0)-S.debt;
+const J=[{n:"Repartidor",req:0,base:15,pct:.05,un:[]},{n:"Camarero",req:500,base:25,pct:.08,un:["dice","hilo"]},{n:"Cajero de casino",req:2000,base:45,pct:.1,un:["slots","mines","wheel"]},{n:"Crupier",req:6000,base:80,pct:.12,un:["bj","roul"]},{n:"Corredor de bolsa",req:15000,base:140,pct:.15,un:["inv","crash"]},{n:"Gerente del Kasino",req:50000,base:300,pct:.2,un:["pach","keno"]},{n:"Dueño del centro",req:250000,base:700,pct:.25,un:[]}];
+const hourPay=()=>(J[S.job].base+Math.max(0,nw())*J[S.job].pct/100)*(S.own.vip?1.25:1)*(S.own.tie?1.15:1);
+const GM=[{id:"horses",n:"Caballos",i:"🐎",f:1},{id:"scratch",n:"Rasca y gana",i:"🎟️",f:1},{id:"coin",n:"Cara o cruz",i:"🪙",f:1},{id:"dice",n:"Dados",i:"🎲"},{id:"hilo",n:"Mayor o menor",i:"🂡"},{id:"mines",n:"Minas",i:"💣"},{id:"keno",n:"Keno",i:"🔢"},{id:"wheel",n:"Rueda de la fortuna",i:"🎡"},{id:"slots",n:"Tragaperras",i:"🎰"},{id:"bj",n:"Blackjack",i:"🃏"},{id:"roul",n:"Ruleta",i:"🔴"},{id:"inv",n:"Inversiones",i:"📈"},{id:"crash",n:"Crash",i:"🚀"},{id:"pach",n:"Pachinko",i:"⚪"}];
+const unl=g=>g.f||J.slice(0,S.max+1).some(j=>j.un.includes(g.id));
+const SH=[{id:"c1",n:"Catálogo de rascas Plata",d:"Rascas de €50",c:600},{id:"c2",n:"Catálogo de rascas Oro",d:"Rascas de €250",c:3000},{id:"c3",n:"Catálogo de rascas Diamante",d:"Rascas de €1000",c:15000},{id:"watch",n:"Reloj dorado",d:"La hora de trabajo dura 20 s en vez de 30 s",c:1500},{id:"vip",n:"Pase VIP",d:"Tu sueldo por hora sube un 25%",c:5000},{id:"clover",n:"Trébol de la suerte",d:"Un 10% extra sobre el beneficio de cada premio",c:8000},{id:"tie",n:"Corbata de seda",d:"Sueldo por hora +15%",c:3500},{id:"ins",n:"Seguro de apuestas",d:"Te devuelve el 5% de cada apuesta perdida",c:6000},{id:"plat",n:"Reloj de platino",d:"La hora de trabajo dura solo 12 s",c:12000},{id:"c4",n:"Catálogo de rascas Leyenda",d:"Rascas de €5000",c:40000}];
+const pay=(a,m)=>{lb=0;let g=a*m;if(g>a){const k=S.st,bo=Math.min(.05*k.s,.25);k.w++;k.s++;k.b=Math.max(k.b,k.s);g+=(g-a)*bo;if(S.own.clover)g+=(g-a)*.1;k.big=Math.max(k.big,g-a)}S.bank+=g;return g};
+function refresh(){if(S.bank<1&&!busy){S.bank=50;S.st.resc++;msg("El Kasino te presta €50 para seguir.")}const bk=$("#bank"),ov=bk.dataset.v;bk.textContent=fmt(S.bank);if(ov&&+ov!=S.bank){bk.classList.remove("bump");void bk.offsetWidth;bk.classList.add("bump")}bk.dataset.v=S.bank;$("#jobline").textContent="Trabajo: "+J[S.job].n+" · "+fmt(hourPay())+" por hora"+(S.st.s>0?" · 🔥 Racha "+S.st.s+" (+"+Math.min(5*S.st.s,25)+"% en el próximo premio)":"")+(S.debt>0?" · 💸 Deuda "+fmt(S.debt):"");chk();const gp=Math.min(100,nw()/GOAL*100);$("#gp").style.width=gp+"%";$("#goal").innerHTML=S.won?"👑 Eres el dueño del Icod-Añaza Centre":"Meta: comprar el Icod-Añaza Centre por "+fmt(GOAL)+" · "+gp.toFixed(1)+"%"+(S.bank>=GOAL?' <button class="go" id="buyc">Comprar</button>':"");save()}
+var AC;let lb=0;const GOAL=500000;
+const LG=[{id:"w1",n:"Primera victoria",r:20,f:()=>S.st.w>=1},{id:"s3",n:"Racha de 3",r:50,f:()=>S.st.b>=3},{id:"s6",n:"Racha de 6",r:200,f:()=>S.st.b>=6},{id:"b50",n:"50 apuestas",r:100,f:()=>S.st.n>=50},{id:"n1k",n:"Patrimonio de €1.000",r:50,f:()=>nw()>=1000},{id:"n10k",n:"Patrimonio de €10.000",r:300,f:()=>nw()>=1e4},{id:"big",n:"Un premio de más de €500",r:100,f:()=>S.st.big>=500},{id:"resc",n:"Rescatado por el Kasino",r:0,f:()=>S.st.resc>0},{id:"shop",n:"Cliente VIP (5 objetos)",r:200,f:()=>Object.keys(S.own).length>=5},{id:"boss",n:"Dueño del centro (puesto)",r:1000,f:()=>S.max>=6},{id:"inv2",n:"Inversor: cartera de €2.000",r:150,f:()=>A.reduce((t,a,i)=>t+(S.hold[i]||0)*a.p,0)>=2000},{id:"debt",n:"Pagaste €1.000 de deuda",r:150,f:()=>(S.st.paid||0)>=1000}];
+function chk(){LG.forEach(l=>{if(!S.ach[l.id]&&l.f()){S.ach[l.id]=1;S.bank+=l.r;toast("🏆 Logro: "+l.n+(l.r?" · +"+fmt(l.r):""))}})}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");tone(660,.1);clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),4500)}
+const hl=()=>S.own.plat?12:S.own.watch?20:30;
+function tone(f,d,t,ty){if(S.mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume();const o=AC.createOscillator(),g=AC.createGain(),s=AC.currentTime+(t||0);o.type=ty||"sine";o.frequency.value=f;g.gain.setValueAtTime(.07,s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.connect(g);g.connect(AC.destination);o.start(s);o.stop(s+d)}catch(e){}}
+function msg(t,c){const m=$("#msg");if(m){if(c=="lose"&&lb>0)S.st.s=0;if(c=="lose"&&S.own.ins&&lb>0){const r=lb*.05;S.bank+=r;t+=" Seguro: +"+fmt(r);lb=0;refresh()}m.textContent=t;m.className="msg "+(c||"");if(c=="win"||c=="lose"){if(c=="win")[523,659,784,1046].forEach((f,i)=>tone(f,.18,i*.09));else tone(160,.35,0,"sawtooth");const p=$("#main");p.classList.remove("fw","fl");void p.offsetWidth;p.classList.add(c=="win"?"fw":"fl")}}}
+function getBet(){lb=0;const v=Math.floor(+$("#amt").value);if(!(v>0)){msg("Pon una apuesta válida.","lose");return 0}if(v>S.bank){msg("No tienes tanto dinero.","lose");return 0}return v}
+const take=a=>{lb=a;S.st.n++;S.bank-=a;refresh()};
+const rnd=n=>Math.floor(Math.random()*n);
+
+/* NAVEGACIÓN */
+const TABS=[["kasino","Icod-Añaza Centre / Kasino","brand"],["sueldo","Sueldo"],["tienda","Tienda"],["trabajos","Apartado de trabajos"],["banco","Préstamos"]];
+function tabs(){$("#top").innerHTML=TABS.map(t=>`<button class="${t[2]||""}${V==t[0]?" on":""}" data-v="${t[0]}">${t[1]}</button>`).join("")}
+function side(){$("#side").innerHTML=GM.map(g=>unl(g)?`<button class="${V=="kasino"&&GID==g.id?"on":""}" data-g="${g.id}">${g.i} ${g.n}</button>`:`<button disabled>🔒 ${g.n}<small>Trabajo: ${J.find(j=>j.un.includes(g.id)).n}</small></button>`).join("")}
+function go(v,g){if(busy){alert("Termina la jugada antes de cambiar.");return}V=v;if(g)GID=g;tabs();side();const m=$("#main");
+ if(v=="kasino"){m.onclick=KCL;m.innerHTML='<div class="bet">Apuesta €<input type="number" id="amt" min="1" value="20"><button class="alt" data-k="h">½</button><button class="alt" data-k="d">×2</button><button class="alt" data-k="a">Todo</button></div><div id="stage"></div><div class="msg" id="msg"></div>';G[GID]($("#stage"))}
+ else if(v=="sueldo")payView(m);else if(v=="tienda")shopView(m);else if(v=="banco")loanView(m);else jobsView(m)}
+$("#top").onclick=e=>{const v=e.target.dataset.v;if(v)go(v)};
+$("#side").onclick=e=>{const g=e.target.closest("[data-g]");if(g)go("kasino",g.dataset.g)};
+const KCL=$("#main").onclick=e=>{const k=e.target.dataset.k,i=$("#amt");if(!k||!i)return;i.value=k=="h"?Math.max(1,Math.floor(i.value/2)):k=="d"?Math.min(Math.floor(S.bank),i.value*2):Math.floor(S.bank)};
+
+/* SUELDO / TIENDA / TRABAJOS */
+function payView(m){m.innerHTML=`<h2>Sueldo</h2><p>Puesto: <b>${J[S.job].n}</b></p><p>Cobras ${fmt(J[S.job].base)} fijos más un ${J[S.job].pct}% de tu patrimonio (${fmt(nw())})${S.own.vip?", con +25% VIP":""}.</p><p class="big" id="hp"></p><div class="prog"><div id="pg"></div></div><p>Sueldo acumulado: <b id="pe"></b> · Horas trabajadas: <b id="hr"></b></p><button class="go" id="cob">Cobrar</button><p class="sm">Cuanto más patrimonio tengas, más cobras por hora. Si cambias a mejor trabajo, el sueldo crece.</p><div class="item"><div><b>🎁 Cofre del Kasino</b><small id="cs"></small></div><button class="go" id="ch">Abrir</button></div><h2>Logros</h2>${LG.map(l=>`<div class="item"><span>${S.ach[l.id]?"🏆":"🔒"} ${l.n}</span><small>${l.r?"+"+fmt(l.r):""}</small></div>`).join("")}`;
+ $("#cob").onclick=()=>{S.bank+=S.pend;S.pend=0;refresh();updPay()};$("#ch").onclick=openChest;updPay()}
+function updPay(){if(V!="sueldo")return;const L=hl();$("#hp").textContent=fmt(hourPay())+" / hora";const cw=Math.max(0,180-Math.floor((Date.now()-(S.chest||0))/1000));$("#cs").textContent=cw?"Disponible en "+cw+" s":"¡Listo para abrir!";$("#ch").disabled=cw>0;$("#pg").style.width=S.tick/L*100+"%";$("#pe").textContent=fmt(S.pend);$("#hr").textContent=S.hours}
+function shopView(m){m.innerHTML="<h2>Tienda</h2>"+SH.map(s=>`<div class="item"><div><b>${s.n}</b><small>${s.d}</small></div>${S.own[s.id]?"<span class='up'>Comprado</span>":`<button class="go" data-b="${s.id}" ${S.bank<s.c?"disabled":""}>${fmt(s.c)}</button>`}</div>`).join("");
+ m.onclick=e=>{const s=SH.find(x=>x.id==e.target.dataset.b);if(s&&S.bank>=s.c&&!S.own[s.id]){S.bank-=s.c;S.own[s.id]=1;refresh();shopView($("#main"))}}}
+function jobsView(m){m.innerHTML="<h2>Apartado de trabajos</h2><p class='sm'>Para optar a un puesto necesitas patrimonio mínimo. Cada puesto desbloquea nuevos juegos.</p>"+J.map((j,i)=>{const ok=nw()>=j.req,un=j.un.map(id=>GM.find(g=>g.id==id).n).join(", ");
+ return `<div class="item"><div><b>${j.n}</b><small>${fmt(j.base)}/h + ${j.pct}% del patrimonio · Requiere ${fmt(j.req)}${un?" · Desbloquea: "+un:""}</small></div>${S.job==i?"<span class='up'>Actual</span>":`<button class="go" data-j="${i}" ${ok?"":"disabled"}>${ok?"Elegir":"Bloqueado"}</button>`}</div>`}).join("");
+ m.onclick=e=>{const i=e.target.dataset.j;if(i!==undefined){S.job=+i;S.max=Math.max(S.max,+i);refresh();side();jobsView($("#main"))}}}
+
+/* JUEGOS */
+const G={};
+G.horses=el=>{const H=[["Relámpago",.4],["Trueno",.28],["Brisa",.18],["Gitano",.1],["Cenicienta",.04]].map(h=>[h[0],h[1],Math.round(.92/h[1]*10)/10]);let pk=0;
+ el.innerHTML='<div class="picks">'+H.map((h,i)=>`<button class="chip${i?"":" on"}" data-i="${i}">${h[0]} ×${h[2]}</button>`).join("")+'</div><div class="track"><div class="fin"></div>'+H.map((h,i)=>`<div class="lane"><b>${i+1}. ${h[0]}</b><span class="horse" id="h${i}">🐎</span></div>`).join("")+'</div><button class="go" id="g">Empezar carrera</button>';
+ el.querySelector(".picks").onclick=e=>{if(busy||e.target.dataset.i===undefined)return;pk=+e.target.dataset.i;el.querySelectorAll(".chip").forEach((c,i)=>c.classList.toggle("on",i==pk))};
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;msg("¡Y salen!");
+  const r=Math.random();let win=0,acc=0;for(let i=0;i<5;i++){acc+=H[i][1];if(r<acc){win=i;break}}
+  const T=H.map((h,i)=>i==win?7000:7150+Math.random()*2200),ph=H.map(()=>Math.random()*6),W=el.querySelector(".track").clientWidth-140,t0=Date.now();
+  const iv=setInterval(()=>{const t=Date.now()-t0;H.forEach((h,i)=>{let f=Math.min(1,t/T[i]);f+=.05*Math.sin(t/230+ph[i])*(1-f)*Math.min(1,t/1500);$("#h"+i).style.left=90+Math.max(0,Math.min(1,f))*W+"px"});
+   if(t>=T[win]){clearInterval(iv);busy=false;const o=[...T.keys()].sort((x,y)=>T[x]-T[y]),mine=o.indexOf(pk)+1;
+    if(win==pk)msg("¡Ganó "+H[win][0]+"! Cobras "+fmt(pay(a,H[pk][2])),"win");else msg("Ganó "+H[win][0]+(mine==2?". ¡Foto finish! Tu caballo fue 2.º por "+((T[pk]-T[win])/1000).toFixed(2)+" s.":". Tu caballo llegó "+mine+".º."),"lose");refresh()}},40)}};
+G._old=el=>{const H=[["Relámpago",2.2],["Trueno",3],["Brisa",4.5],["Gitano",7],["Cenicienta",12]];let pk=0;
+ el.innerHTML='<div class="picks">'+H.map((h,i)=>`<button class="chip${i?"":" on"}" data-i="${i}">${h[0]} ×${h[1]}</button>`).join("")+'</div><div class="track">'+H.map((h,i)=>`<div class="lane"><b>${h[0]}</b><span class="horse" id="h${i}">🐎</span></div>`).join("")+'</div><button class="go" id="g">Empezar carrera</button>';
+ el.querySelector(".picks").onclick=e=>{if(busy||e.target.dataset.i===undefined)return;pk=+e.target.dataset.i;el.querySelectorAll(".chip").forEach((c,i)=>c.classList.toggle("on",i==pk))};
+ $("#g").onclick=()=>{const a=getBet();if(!a)return;take(a);busy=true;msg("¡Y salen!");const w=H.map(h=>.9/h[1]),pos=H.map(()=>0),W=el.querySelector(".track").clientWidth-130;
+  const t=setInterval(()=>{H.forEach((h,i)=>{pos[i]+=Math.random()*3.2*(.6+w[i]*1.6);$("#h"+i).style.left=90+Math.min(pos[i]/100,1)*W+"px"});
+   if(pos.some(p=>p>=100)){clearInterval(t);busy=false;const win=pos.indexOf(Math.max(...pos));
+    if(win==pk)msg("¡Ganó "+H[win][0]+"! Cobras "+fmt(pay(a,H[pk][1])),"win");else msg("Ganó "+H[win][0]+". Pierdes "+fmt(a),"lose");refresh()}},120)}};
+
+G.bj=el=>{let dk=[],ph,dh,bet=0;const R=["A",2,3,4,5,6,7,8,9,10,"J","Q","K"];
+ const val=h=>{let s=0,a=0;h.forEach(c=>{if(c.r=="A"){a++;s+=11}else s+="JQK".includes(c.r)?10:+c.r});while(s>21&&a){s-=10;a--}return s};
+ const dr=()=>{if(dk.length<10){dk=[];for(const s of "♠♥♦♣")for(const r of R)dk.push({r:""+r,s});dk.sort(()=>Math.random()-.5)}return dk.pop()};
+ const cd=(c,h)=>h?'<i class="cd bk"></i>':`<i class="cd${"♥♦".includes(c.s)?" r":""}">${c.r}${c.s}</i>`;
+ const show=h=>{$("#ph").innerHTML=ph.map(c=>cd(c)).join("");$("#dh").innerHTML=dh.map((c,i)=>cd(c,h&&i)).join("");$("#pv").textContent="("+val(ph)+")"};
+ const en=(d,hh,s,b)=>{$("#deal").disabled=d;$("#hit").disabled=hh;$("#st").disabled=s;$("#db").disabled=b};
+ const end=(t,m)=>{busy=false;en(false,1,1,1);show(false);if(m)pay(bet,m);refresh();msg(t,m>1?"win":m?"":"lose")};
+ el.innerHTML='<p class="sm">Crupier</p><div class="hand" id="dh"></div><p class="sm">Tú <b id="pv"></b></p><div class="hand" id="ph"></div><div class="row"><button class="go" id="deal">Repartir</button><button class="alt" id="hit" disabled>Pedir</button><button class="alt" id="st" disabled>Plantarse</button><button class="alt" id="db" disabled>Doblar</button></div>';
+ const stand=()=>{while(val(dh)<17)dh.push(dr());const p=val(ph),d=val(dh);d>21?end("El crupier se pasó ("+d+"). ¡Ganas!",2):p>d?end("Ganas "+p+" a "+d,2):p==d?end("Empate a "+p,1):end("Pierdes "+p+" a "+d,0)};
+ $("#deal").onclick=()=>{const a=getBet();if(!a)return;bet=a;take(a);busy=true;ph=[dr(),dr()];dh=[dr(),dr()];msg("");show(true);
+  if(val(ph)==21)val(dh)==21?end("Empate de blackjack",1):end("¡Blackjack! Paga 3:2",2.5);else en(1,0,0,S.bank<a)};
+ $("#hit").onclick=()=>{ph.push(dr());$("#db").disabled=true;show(true);if(val(ph)>21)end("Te pasaste con "+val(ph),0)};
+ $("#st").onclick=stand;
+ $("#db").onclick=()=>{take(bet);bet*=2;ph.push(dr());val(ph)>21?end("Te pasaste con "+val(ph),0):stand()}};
+
+G.scratch=el=>{let tier=0,cells,win,cost,cnt=0;const T=[["Básico",10,0],["Plata",50,"c1"],["Oro",250,"c2"],["Diamante",1000,"c3"],["Leyenda",5000,"c4"]],SY=[["🍒",3,11],["🍋",5,5],["🔔",10,2],["💎",50,.4]],F=["🍀","⭐","🍇","🍉","🍒","🍋","🔔","💎"];
+ const grid=()=>{$("#gr").innerHTML="";for(let i=0;i<9;i++){const b=document.createElement("button");b.className="sq";b.setAttribute("aria-label","casilla "+(i+1));b.onclick=()=>op(i);$("#gr").append(b)}};
+ const op=i=>{if(!cells)return;const b=$("#gr").children[i];if(b.classList.contains("open"))return;b.textContent=cells[i];b.classList.add("open");if(++cnt==9)fin()};
+ const fin=()=>{busy=false;cells=null;if(win){msg("¡Tres "+win[0]+"! Ganas "+fmt(pay(cost,win[1])),"win")}else{const nr=[...$("#gr").children].filter(b=>b.textContent=="💎").length>=2;msg(nr?"¡Casi! Dos 💎, te faltó uno.":"Sin premio esta vez.","lose")}refresh()};
+ el.innerHTML='<div class="picks" id="tr">'+T.map((t,i)=>{const l=t[2]&&!S.own[t[2]];return `<button class="chip${i?"":" on"}" data-i="${i}" ${l?"disabled":""}>${l?"🔒 ":""}${t[0]} · €${t[1]}</button>`}).join("")+'</div><p class="sm">Los catálogos Plata, Oro y Diamante se compran en la Tienda. Tres iguales ganan: 🍒×3 · 🍋×5 · 🔔×10 · 💎×50</p><div class="grid" id="gr"></div><div class="row"><button class="go" id="buy">Comprar rasca</button><button class="alt" id="all">Rascar todo</button></div>';grid();
+ $("#tr").onclick=e=>{if(busy||e.target.dataset.i===undefined)return;tier=+e.target.dataset.i;el.querySelectorAll(".chip").forEach((c,i)=>c.classList.toggle("on",i==tier))};
+ $("#all").onclick=()=>{for(let i=0;i<9;i++)op(i)};
+ $("#buy").onclick=()=>{if(busy)return;cost=T[tier][1];if(S.bank<cost){msg("No tienes tanto dinero.","lose");return}take(cost);busy=true;cnt=0;grid();msg("Rasca las casillas…");
+  let r=Math.random()*100,acc=0;win=null;for(const s of SY){acc+=s[2];if(r<acc){win=s;break}}
+  const pool=[...F,...F].filter(x=>!win||x!=win[0]).sort(()=>Math.random()-.5);cells=pool.slice(0,9);
+  if(win)[0,1,2,3,4,5,6,7,8].sort(()=>Math.random()-.5).slice(0,3).forEach(k=>cells[k]=win[0])}};
+
+G.coin=el=>{let pk="Cara";el.innerHTML='<div class="picks"><button class="chip on" data-p="Cara">Cara</button><button class="chip" data-p="Cruz">Cruz</button></div><p class="big" id="cn">🪙</p><button class="go" id="g">Lanzar (×1,95)</button>';
+ el.querySelector(".picks").onclick=e=>{if(e.target.dataset.p){pk=e.target.dataset.p;el.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p==pk))}};
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;let n=0;const t=setInterval(()=>{$("#cn").textContent=n%2?"🪙":"⚪";if(++n>8){clearInterval(t);busy=false;const r=Math.random()<.5?"Cara":"Cruz";$("#cn").textContent=r;r==pk?msg("Salió "+r+". Ganas "+fmt(pay(a,1.95)),"win"):msg("Salió "+r+". Pierdes "+fmt(a),"lose");refresh()}},90)}};
+
+G.dice=el=>{let pk="lo";const D="⚀⚁⚂⚃⚄⚅",O={lo:["Bajo (2–6)",2.2],se:["Siete",5.5],hi:["Alto (8–12)",2.2]};
+ el.innerHTML='<div class="picks">'+Object.entries(O).map(([k,v])=>`<button class="chip${k=="lo"?" on":""}" data-p="${k}">${v[0]} ×${v[1]}</button>`).join("")+'</div><p class="big" id="dd">⚀ ⚀</p><button class="go" id="g">Tirar dados</button>';
+ el.querySelector(".picks").onclick=e=>{if(e.target.dataset.p){pk=e.target.dataset.p;el.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p==pk))}};
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;let n=0;const t=setInterval(()=>{const x=rnd(6),y=rnd(6);$("#dd").textContent=D[x]+" "+D[y];if(++n>10){clearInterval(t);busy=false;const s=x+y+2,k=s<7?"lo":s>7?"hi":"se";
+  k==pk?msg("Suman "+s+". Ganas "+fmt(pay(a,O[k][1])),"win"):msg("Suman "+s+". Pierdes "+fmt(a),"lose");refresh()}},100)}};
+
+G.slots=el=>{const W=[["🍒",30],["🍋",25],["🔔",20],["⭐",14],["💎",8],["7️⃣",3]],P={"🍒":8,"🍋":12,"🔔":20,"⭐":40,"💎":100,"7️⃣":400};
+ const sy=()=>{let r=Math.random()*100;for(const[s,w]of W){if((r-=w)<0)return s}return"🍒"};
+ el.innerHTML='<div class="reels"><div class="reel">🍒</div><div class="reel">🍋</div><div class="reel">🔔</div></div><p class="sm" style="text-align:center">Tres iguales: 🍒×8 · 🍋×12 · 🔔×20 · ⭐×40 · 💎×100 · 7️⃣×400. Dos 🍒 al inicio: ×2</p><div class="row" style="justify-content:center"><button class="go" id="g">Girar</button></div>';
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;msg("");const R=[...el.querySelectorAll(".reel")],res=[sy(),sy(),sy()],st=[0,0,0];
+  const t=setInterval(()=>{st[0]+=80;R.forEach((r,i)=>{if(st[0]<700+i*400+(i==2&&res[0]==res[1]?900:0)){r.textContent=sy();r.classList.add("sp")}else{r.textContent=res[i];r.classList.remove("sp")}});
+   if(st[0]>=(res[0]==res[1]?2400:1500)){clearInterval(t);busy=false;let m=0;if(res[0]==res[1]&&res[1]==res[2])m=P[res[0]];else if(res[0]=="🍒"&&res[1]=="🍒")m=2;
+    m?msg("¡Premio ×"+m+"! Ganas "+fmt(pay(a,m)),"win"):msg("Sin premio.","lose");refresh()}},80)}};
+
+G.roul=el=>{const RD=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];let pk="red";
+ el.innerHTML='<div class="picks"><button class="chip on" data-p="red">Rojo ×2</button><button class="chip" data-p="blk">Negro ×2</button><button class="chip" data-p="par">Par ×2</button><button class="chip" data-p="imp">Impar ×2</button><button class="chip" data-p="num">Número ×36</button></div><div class="sm">Número (0–36): <input type="number" id="nn" min="0" max="36" value="7"></div><p class="big" id="rr">0</p><button class="go" id="g">Girar ruleta</button>';
+ el.querySelector(".picks").onclick=e=>{if(e.target.dataset.p){pk=e.target.dataset.p;el.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c.dataset.p==pk))}};
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;const n=+$("#nn").value;let k=0;const t=setInterval(()=>{const x=rnd(37);$("#rr").textContent=x;if(++k>16){clearInterval(t);busy=false;const red=RD.includes(x);
+  const w=pk=="red"?red:pk=="blk"?x>0&&!red:pk=="par"?x>0&&x%2==0:pk=="imp"?x%2==1:x==n;
+  $("#rr").style.color=x==0?"#6fd49a":red?"#e0574d":"#f6f1e3";w?msg("Sale "+x+". Ganas "+fmt(pay(a,pk=="num"?36:2)),"win"):msg("Sale "+x+". Pierdes "+fmt(a),"lose");refresh()}},90)}};
+
+G.crash=el=>{let tm=null,m,cp,a;el.innerHTML='<p class="big" id="mx">×1,00</p><div class="row" style="justify-content:center"><button class="go" id="g">Despegar</button><button class="alt" id="co" disabled>Retirarse</button></div><p class="sm">El cohete sube y puede estallar en cualquier momento. Retírate a tiempo.</p>';
+ $("#g").onclick=()=>{if(busy)return;a=getBet();if(!a)return;take(a);busy=true;m=1;cp=Math.min(200,.96/(1-Math.random()));$("#g").disabled=true;$("#co").disabled=false;$("#mx").style.color="";msg("");
+  tm=setInterval(()=>{m*=1.012;if(m>=cp){clearInterval(tm);$("#mx").textContent="💥 ×"+cp.toFixed(2);$("#mx").style.color="#e0574d";done();msg("Estalló en ×"+cp.toFixed(2)+". Pierdes "+fmt(a),"lose")}else $("#mx").textContent="×"+m.toFixed(2)},70)};
+ const done=()=>{busy=false;$("#g").disabled=false;$("#co").disabled=true;refresh()};
+ $("#co").onclick=()=>{if(!tm||!busy)return;clearInterval(tm);const g=pay(a,m);done();msg("Retirada en ×"+m.toFixed(2)+". Ganas "+fmt(g),"win")}};
+
+G.inv=el=>{el.innerHTML='<table><thead><tr><th>Activo</th><th>Precio</th><th>Tienes</th><th></th></tr></thead><tbody id="mk"></tbody></table><p class="sm">Usa el importe de arriba para comprar o vender. Los precios cambian cada 2 s.</p>';
+ $("#mk").onclick=e=>{const d=e.target.dataset;if(d.b!==undefined){const a=getBet();if(!a)return;take(a);S.hold[d.b]=(S.hold[d.b]||0)+a/A[d.b].p;msg("Compraste "+fmt(a)+" de "+A[d.b].n)}
+  else if(d.s!==undefined){const h=S.hold[d.s]||0;if(!h){msg("No tienes de eso.","lose");return}const a=Math.min(+$("#amt").value||0,h*A[d.s].p);if(a<=0)return;S.hold[d.s]=h-a/A[d.s].p;S.bank+=a;refresh();msg("Vendiste "+fmt(a)+" de "+A[d.s].n)}mk()};mk()};
+function mk(){const t=$("#mk");if(!t)return;t.innerHTML=A.map((a,i)=>{const c=(a.p/a.l-1)*100;return `<tr><td>${a.n}</td><td>${fmt(a.p)} <small class="${c>=0?"up":"dn"}">${c>=0?"▲":"▼"}${Math.abs(c).toFixed(1)}%</small></td><td>${fmt((S.hold[i]||0)*a.p)}</td><td><button class="alt" data-b="${i}">Comprar</button> <button class="alt" data-s="${i}">Vender</button></td></tr>`}).join("")}
+
+G.pach=el=>{const M=[10,3,1,.5,.3,.5,1,3,10];el.innerHTML='<canvas id="cv" width="420" height="440"></canvas><div class="row" style="justify-content:center"><button class="go" id="g">Soltar bola</button></div>';const cx=$("#cv").getContext("2d");
+ const bd=b=>{cx.clearRect(0,0,420,440);cx.fillStyle="#ffffff99";for(let r=0;r<8;r++)for(let k=0;k<=r+1;k++){cx.beginPath();cx.arc(210+(k-(r+1)/2)*44,50+r*40,4,0,7);cx.fill()}
+  cx.font="bold 15px Georgia";cx.textAlign="center";M.forEach((m,i)=>{cx.fillStyle=m>=3?"#d4af37":m<1?"#e0574d":"#fff";cx.fillText("×"+m,210+(i-4)*44,425)});if(b){cx.fillStyle="#fff";cx.beginPath();cx.arc(b[0],b[1],8,0,7);cx.fill()}};bd();
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;msg("");let bin=0,px=210;const pts=[[210,14]];for(let r=0;r<8;r++){const d=Math.random()<.5?-1:1;bin+=d>0?1:0;px+=d*22;pts.push([px,50+r*40+20])}pts.push([px,400]);
+  let sg=0,t=0;const iv=setInterval(()=>{t+=.13;if(t>=1){t=0;sg++}if(sg>=pts.length-1){clearInterval(iv);busy=false;bd(pts[pts.length-1]);const g=pay(a,M[bin]);msg("Cae en ×"+M[bin]+": "+(g>a?"ganas ":"recuperas ")+fmt(g),g>a?"win":"lose");refresh();return}
+   const p=pts[sg],q=pts[sg+1];bd([p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t*t])},30)}};
+
+G.hilo=el=>{let c,m=1,a;const N=["A",2,3,4,5,6,7,8,9,10,"J","Q","K"];
+ const show=()=>{$("#hc").innerHTML=`<i class="cd">${N[c-1]}</i>`;$("#hm").textContent="×"+m.toFixed(2)};
+ el.innerHTML='<div class="hand" id="hc" style="justify-content:center"></div><p class="big" id="hm">×1,00</p><div class="row" style="justify-content:center"><button class="go" id="st">Repartir</button><button class="alt" id="hi" disabled>Mayor</button><button class="alt" id="lo" disabled>Menor</button><button class="alt" id="co" disabled>Retirarse</button></div><p class="sm">Adivina si la siguiente carta será mayor o menor. Con empate pierdes. Cada acierto multiplica tu premio.</p>';
+ const en=b=>{["hi","lo","co"].forEach(i=>$("#"+i).disabled=!b);$("#st").disabled=b};
+ const guess=up=>{const n=1+rnd(13),p=(up?13-c:c-1)/13,ok=up?n>c:n<c;c=n;if(ok){m*=.95/p;show();msg("")}else{show();en(0);busy=false;msg("Salió "+N[n-1]+". Pierdes "+fmt(a),"lose");refresh()}};
+ $("#st").onclick=()=>{a=getBet();if(!a)return;take(a);busy=true;c=1+rnd(13);m=1;msg("");show();en(1)};
+ $("#hi").onclick=()=>guess(true);$("#lo").onclick=()=>guess(false);
+ $("#co").onclick=()=>{en(0);busy=false;msg("Te retiras en ×"+m.toFixed(2)+". Cobras "+fmt(pay(a,m)),m>1?"win":"");refresh()}};
+
+G.mines=el=>{let mn,a,k,m,on=false;const mul=n=>{let r=.95;for(let i=0;i<n;i++)r*=(25-i)/(22-i);return r};
+ el.innerHTML='<p class="big" id="mm">×1,00</p><div class="grid" id="gr" style="grid-template-columns:repeat(5,56px)"></div><div class="row" style="justify-content:center"><button class="go" id="st">Empezar</button><button class="alt" id="co" disabled>Retirarse</button></div><p class="sm">25 casillas, 3 minas. Cada casilla segura sube el multiplicador.</p>';
+ const draw=()=>{$("#gr").innerHTML="";for(let i=0;i<25;i++){const b=document.createElement("button");b.className="sq";b.style.cssText="height:56px;font-size:1.4rem";b.onclick=()=>pk(i);$("#gr").append(b)}};draw();
+ const end=()=>{on=false;busy=false;$("#co").disabled=true;$("#st").disabled=false;mn.forEach(i=>{const b=$("#gr").children[i];b.textContent="💣";b.classList.add("open")});refresh()};
+ const cash=()=>{const g=pay(a,m);end();msg("Te retiras en ×"+m.toFixed(2)+". Cobras "+fmt(g),"win")};
+ const pk=i=>{if(!on)return;const b=$("#gr").children[i];if(b.classList.contains("open"))return;
+  if(mn.includes(i)){end();msg("¡Una mina! Pierdes "+fmt(a),"lose")}else{b.classList.add("open");b.textContent="💎";k++;m=mul(k);$("#mm").textContent="×"+m.toFixed(2);$("#co").disabled=false;if(k==22)cash()}};
+ $("#st").onclick=()=>{a=getBet();if(!a)return;take(a);busy=on=true;k=0;m=1;mn=[...Array(25).keys()].sort(()=>Math.random()-.5).slice(0,3);draw();$("#mm").textContent="×1,00";$("#st").disabled=true;msg("")};
+ $("#co").onclick=()=>{if(on&&k)cash()}};
+
+G.keno=el=>{let sel=[];const P={2:.5,3:2,4:8,5:100};
+ el.innerHTML='<p class="sm">Elige 5 números del 1 al 30. Se sortean 10. Aciertos: 2 ×0,5 · 3 ×2 · 4 ×8 · 5 ×100</p><div class="grid" id="gr" style="grid-template-columns:repeat(6,46px)"></div><div class="row" style="justify-content:center"><button class="go" id="g">Sortear</button></div>';
+ for(let i=1;i<=30;i++){const b=document.createElement("button");b.className="chip";b.textContent=i;b.style.padding="10px 0";b.onclick=()=>{if(busy)return;const x=sel.indexOf(i);if(x>=0){sel.splice(x,1);b.classList.remove("on")}else if(sel.length<5){sel.push(i);b.classList.add("on")}};$("#gr").append(b)}
+ $("#g").onclick=()=>{if(busy)return;if(sel.length<5){msg("Elige 5 números.","lose");return}const a=getBet();if(!a)return;take(a);busy=true;msg("");const bs=[...$("#gr").children];bs.forEach(b=>{b.style.background="";b.style.color=""});
+  const dr=[...Array(30).keys()].map(x=>x+1).sort(()=>Math.random()-.5).slice(0,10);let n=0;
+  const t=setInterval(()=>{const x=dr[n],h=sel.includes(x);bs[x-1].style.background=h?"#d4af37":"#555";bs[x-1].style.color=h?"#000":"#fff";tone(h?880:300,.08);
+   if(++n>=10){clearInterval(t);busy=false;const hit=sel.filter(s=>dr.includes(s)).length,m=P[hit]||0;m?msg(hit+" aciertos. Cobras "+fmt(pay(a,m)),m>1?"win":""):msg(hit+" aciertos. Pierdes "+fmt(a),"lose");refresh()}},200)}};
+
+const EVT=[()=>{const g=Math.max(20,Math.round(nw()*.02));S.bank+=g;return"💰 Un cliente generoso te deja "+fmt(g)+" de propina."},()=>{if(S.bank<100)return"🕵️ Un ladrón mira tu cartera vacía y se va con pena.";const g=Math.round(S.bank*.04);S.bank-=g;return"🦦 ¡Un ratero te roba "+fmt(g)+"!"},()=>{const i=rnd(A.length);A[i].p*=1.3;return"📰 Soplo: "+A[i].n+" se dispara un 30%."},()=>{const i=rnd(A.length);A[i].p=Math.max(1,A[i].p*.75);return"📰 Mala noticia: "+A[i].n+" se desploma un 25%."},()=>{S.pend+=hourPay();return"😀 Tu jefe está contento: te adelanta una hora de sueldo."}];
+setInterval(()=>{if(!busy&&Math.random()<.7){const t=EVT[rnd(EVT.length)]();refresh();toast(t);if(V=="kasino"&&GID=="inv")mk()}},40000);
+$("#goal").onclick=e=>{if(e.target.id=="buyc"&&S.bank>=GOAL&&!S.won&&!busy){S.won=1;S.bank-=GOAL;refresh();$("#main").innerHTML=`<h2>👑 ¡Eres el dueño del Icod-Añaza Centre!</h2><p>Horas trabajadas: <b>${S.hours}</b> · Apuestas: <b>${S.st.n}</b> · Mejor racha: <b>${S.st.b}</b> · Logros: <b>${Object.keys(S.ach).length}/${LG.length}</b></p><button class="go" id="gg">Seguir jugando</button>`;tone(784,.4);$("#gg").onclick=()=>go("kasino")}};
+function hourly(){if(S.debt>0){S.debt=Math.round(S.debt*(1+(S.lend=="shark"?.06:.015))*100)/100;if(S.lend=="shark"&&S.hours%8==0){const c=Math.min(S.bank,S.debt*.4);S.bank-=c;S.debt-=c;toast("🦈 Don Tiburón pasa a cobrar: te quita "+fmt(c))}}A.forEach((a,i)=>{if(a.d&&S.hold[i])S.bank+=S.hold[i]*a.p*a.d/100})}
+function openChest(){if(Date.now()-(S.chest||0)<18e4)return;S.chest=Date.now();const g=Math.round(30+Math.random()*Math.max(20,nw()*.03));S.bank+=g;refresh();toast("🎁 El cofre contenía "+fmt(g));updPay()}
+function loanView(m){const v0=Math.max(0,nw()),lim={bank:Math.round(Math.max(300,v0*.5)),shark:Math.round(Math.max(500,v0*2))};
+ m.innerHTML=`<h2>Préstamos</h2><p>Deuda actual: <b>${fmt(S.debt)}</b>${S.debt>0?" con "+(S.lend=="shark"?"el usurero":"el banco"):""}. Tu deuda resta de tu patrimonio.</p><div class="item"><div><b>🏦 Banco</b><small>Interés 1,5% por hora · hasta ${fmt(lim.bank)}</small></div><button class="go" data-l="bank">Pedir</button></div><div class="item"><div><b>🦈 Don Tiburón, el usurero</b><small>Interés 6% por hora · hasta ${fmt(lim.shark)} · cada 8 horas te quita el 40% de la deuda de tu bolsillo</small></div><button class="go" data-l="shark">Pedir</button></div><div class="bet" style="margin-top:12px">Importe €<input type="number" id="la" min="1" value="100"><button class="alt" data-p="amt">Pagar importe</button><button class="alt" data-p="all">Pagar todo</button></div><div class="msg" id="lm"></div>`;
+ m.onclick=e=>{const d=e.target.dataset,v=Math.floor(+$("#la").value)||0,say=t=>$("#lm").textContent=t;
+  if(d.l){if(S.debt>0&&S.lend!=d.l)return say("Primero paga tu deuda actual.");const room=lim[d.l]-(S.lend==d.l?S.debt:0);if(v<=0||v>room)return say("Puedes pedir hasta "+fmt(Math.max(0,room))+".");S.bank+=v;S.debt+=v;S.lend=d.l;refresh();loanView($("#main"))}
+  else if(d.p){const x=Math.min(d.p=="all"?S.debt:v,S.debt,S.bank);if(x<=0)return say("No puedes pagar ahora.");S.bank-=x;S.debt=Math.max(0,S.debt-x);S.st.paid=(S.st.paid||0)+x;if(S.debt<.01){S.debt=0;S.lend=null}refresh();loanView($("#main"))}}}
+function spark(h){const mn=Math.min(...h),r=Math.max(...h)-mn||1;return '<svg width="64" height="22" viewBox="0 0 64 22"><polyline fill="none" stroke="'+(h[29]>=h[0]?"#6fd49a":"#e0574d")+'" stroke-width="1.6" points="'+h.map((v,i)=>(i*64/29).toFixed(1)+","+(20-(v-mn)/r*18).toFixed(1)).join(" ")+'"/></svg>'}
+function mk(){const t=$("#mk");if(!t)return;const pf=A.reduce((s,a,i)=>s+(S.hold[i]||0)*a.p,0);$("#mood").textContent=(MK>.25?"🐂 Mercado alcista":MK<-.25?"🐻 Mercado bajista":"😐 Mercado lateral")+" · Cartera: "+fmt(pf);t.innerHTML=A.map((a,i)=>{const c=(a.p/a.l-1)*100;return `<tr><td>${a.n}${a.d?` <small class="sm">+${a.d}%/h</small>`:""}</td><td>${spark(a.h)}</td><td>${fmt(a.p)} <small class="${c>=0?"up":"dn"}">${c>=0?"▲":"▼"}${Math.abs(c).toFixed(1)}%</small></td><td>${fmt((S.hold[i]||0)*a.p)}</td><td><button class="alt" data-b="${i}">+</button> <button class="alt" data-s="${i}">−</button></td></tr>`}).join("")}
+G.inv=el=>{el.innerHTML='<p class="sm" id="mood"></p><table><thead><tr><th>Activo</th><th>Tendencia</th><th>Precio</th><th>Tienes</th><th></th></tr></thead><tbody id="mk"></tbody></table><div class="row"><button class="alt" id="sa">Vender todo</button></div><p class="sm">Compra (+) y vende (−) con el importe de arriba. Bonos e Inmuebles pagan dividendos cada hora. El Memecoin puede multiplicarse o hundirse.</p>';
+ $("#sa").onclick=()=>{let t=0;A.forEach((a,i)=>{t+=(S.hold[i]||0)*a.p;S.hold[i]=0});S.bank+=t;refresh();msg("Vendiste toda tu cartera por "+fmt(t));mk()};
+ $("#mk").onclick=e=>{const d=e.target.dataset;if(d.b!==undefined){const a=getBet();if(!a)return;take(a);S.hold[d.b]=(S.hold[d.b]||0)+a/A[d.b].p;msg("Compraste "+fmt(a)+" de "+A[d.b].n)}
+  else if(d.s!==undefined){const h=S.hold[d.s]||0;if(!h){msg("No tienes de eso.","lose");return}const a=Math.min(+$("#amt").value||0,h*A[d.s].p);if(a<=0)return;S.hold[d.s]=h-a/A[d.s].p;S.bank+=a;refresh();msg("Vendiste "+fmt(a)+" de "+A[d.s].n)}mk()};mk()};
+G.wheel=el=>{const W=[[0,.34],[.5,.22],[1,.2],[1.5,.11],[2,.08],[5,.049],[20,.001]];
+ el.innerHTML='<p class="big" id="wh">🎡</p><div class="row" style="justify-content:center"><button class="go" id="g">Girar rueda</button></div><p class="sm" style="text-align:center">Premios: ×0 · ×0,5 · ×1 · ×1,5 · ×2 · ×5 · ×20</p>';
+ $("#g").onclick=()=>{if(busy)return;const a=getBet();if(!a)return;take(a);busy=true;msg("");let r=Math.random(),m=0,acc=0;for(const s of W){acc+=s[1];if(r<acc){m=s[0];break}}
+  let n=0,d=50;const step=()=>{if(++n>22){$("#wh").textContent="×"+m;busy=false;tone(m>1?880:200,.3);if(m>1)msg("¡×"+m+"! Cobras "+fmt(pay(a,m)),"win");else if(m>0){pay(a,m);msg("×"+m+": recuperas "+fmt(a*m),m==1?"":"lose")}else msg("×0. Pierdes "+fmt(a),"lose");refresh();return}
+   $("#wh").textContent="×"+W[rnd(7)][0];tone(300+n*18,.04,0,"square");setTimeout(step,d+=n*5)};step()}};
+/* RELOJ */
+setInterval(()=>{const L=hl();if(++S.tick>=L){S.tick=0;S.hours++;S.pend+=hourPay();hourly()}updPay();refresh()},1000);
+setInterval(()=>{MK=Math.max(-1,Math.min(1,MK+(Math.random()-.5)*.2));A.forEach(a=>{a.l=a.p;let r=(Math.random()-.48)*2*a.v+MK*a.v*.12;if(Math.random()<.03)r+=(Math.random()-.5)*a.v*8;a.p=Math.max(1,a.p*(1+r));a.h.push(a.p);if(a.h.length>30)a.h.shift()});if(V=="kasino"&&GID=="inv")mk()},2000);
+$("#snd").onclick=e=>{S.mute=!S.mute;e.target.textContent=S.mute?"🔇 Sonido":"🔊 Sonido";save()};$("#snd").textContent=S.mute?"🔇 Sonido":"🔊 Sonido";
+document.addEventListener("click",e=>{if(e.target.closest("button"))tone(440,.04,0,"square")});
+$("#reset").onclick=()=>{if(confirm("¿Reiniciar la partida?")){try{localStorage.removeItem("kasino2")}catch(e){}location.reload()}};
+refresh();go("kasino","horses");
+</script>
+</body>
+</html>
